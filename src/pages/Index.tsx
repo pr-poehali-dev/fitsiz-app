@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Icon from '@/components/ui/icon';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 declare global {
   interface Window {
@@ -35,10 +36,19 @@ declare global {
 
 type Screen = 'home' | 'setup' | 'history' | 'info';
 
+interface HistoryItem {
+  id: string;
+  question: string;
+  answer: string;
+  created_at: string;
+}
+
 export default function Index() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
   const [userName, setUserName] = useState('Гость');
   const [isTelegram, setIsTelegram] = useState(true);
+  const [userId, setUserId] = useState<number | null>(null);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
 
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
@@ -56,6 +66,23 @@ export default function Index() {
     const user = tg.initDataUnsafe?.user;
     if (user) {
       setUserName(user.first_name + (user.last_name ? ' ' + user.last_name : ''));
+      setUserId(user.id);
+      
+      const mockHistory: HistoryItem[] = [
+        {
+          id: '1',
+          question: 'Как правильно настроить чувствительность маски ELEMENT STATIC?',
+          answer: 'Для настройки чувствительности маски ELEMENT STATIC используйте регулятор на внутренней панели. Рекомендуемое значение для начала работы - средний уровень (позиция 5 из 9).',
+          created_at: new Date().toISOString()
+        },
+        {
+          id: '2',
+          question: 'Какая батарея используется в маске?',
+          answer: 'В масках FITSIZ используются солнечные панели с резервной литиевой батареей CR2032. Срок службы батареи составляет до 3000 часов активной работы.',
+          created_at: new Date(Date.now() - 86400000).toISOString()
+        }
+      ];
+      setHistory(mockHistory);
     }
 
     tg.BackButton.onClick(() => {
@@ -186,19 +213,25 @@ export default function Index() {
           
           <div className="space-y-4">
             {[
-              { name: 'ELEMENT STATIC', id: '456239193' },
-              { name: 'EXPAN HD ULTRA', id: '456239191' },
-              { name: 'ELEMENT HD COLOR', id: '456239190' },
-              { name: 'ELEMENT CLASSIC', id: '456239189' },
-              { name: 'ELEMENT ARGON', id: '456239188' },
+              { name: 'ELEMENT STATIC', id: '456239193', hash: 'a9a83df54c8adec1' },
+              { name: 'EXPAN HD ULTRA', id: '456239191', hash: '46c5399c9b47b387' },
+              { name: 'ELEMENT HD COLOR', id: '456239190', hash: '222bf01e55988021' },
+              { name: 'ELEMENT CLASSIC', id: '456239189', hash: '90d3d7c9ca40a542' },
+              { name: 'ELEMENT ARGON', id: '456239188', hash: '72527eee1f7e98f6' },
             ].map((model, idx) => (
-              <Card key={idx} className="bg-card border-border p-6 hover-scale cursor-pointer">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold">{model.name}</h3>
-                  <Icon name="Play" size={24} className="text-primary" />
+              <Card key={idx} className="bg-card border-border overflow-hidden">
+                <div className="p-4">
+                  <h3 className="text-xl font-bold mb-2">{model.name}</h3>
                 </div>
-                <div className="aspect-video bg-muted rounded-xl flex items-center justify-center">
-                  <Icon name="Video" size={48} className="text-muted-foreground" />
+                <div className="aspect-video bg-muted">
+                  <iframe
+                    src={`https://vkvideo.ru/video_ext.php?oid=-224209762&id=${model.id}&hash=${model.hash}&hd=3`}
+                    width="100%"
+                    height="100%"
+                    allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;"
+                    frameBorder="0"
+                    allowFullScreen
+                  />
                 </div>
               </Card>
             ))}
@@ -210,17 +243,58 @@ export default function Index() {
         <div className="p-6 space-y-6">
           <h1 className="text-3xl font-bold">История запросов</h1>
           
-          <div className="flex flex-col items-center justify-center py-20 space-y-4">
-            <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center">
-              <Icon name="MessageSquare" size={40} className="text-muted-foreground" />
+          {history.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 space-y-4">
+              <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center">
+                <Icon name="MessageSquare" size={40} className="text-muted-foreground" />
+              </div>
+              <p className="text-muted-foreground text-center">
+                У вас еще нет запросов к ассистенту
+              </p>
+              <Button onClick={() => openBot('fitsiz_assistant_bot')} className="bg-primary hover:bg-primary/90">
+                Начать диалог
+              </Button>
             </div>
-            <p className="text-muted-foreground text-center">
-              У вас еще нет запросов к ассистенту
-            </p>
-            <Button onClick={() => openBot('fitsiz_assistant_bot')} className="bg-primary hover:bg-primary/90">
-              Начать диалог
-            </Button>
-          </div>
+          ) : (
+            <ScrollArea className="h-[calc(100vh-200px)]">
+              <div className="space-y-4">
+                {history.map((item) => (
+                  <Card key={item.id} className="bg-card border-border p-4 space-y-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                        <Icon name="User" size={16} className="text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Вопрос:</p>
+                        <p className="text-foreground">{item.question}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center flex-shrink-0">
+                        <Icon name="Bot" size={16} className="text-secondary-foreground" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Ответ:</p>
+                        <p className="text-foreground">{item.answer}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-border">
+                      <span>{new Date(item.created_at).toLocaleDateString('ru-RU', { 
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}</span>
+                      <Icon name="Clock" size={14} />
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
         </div>
       )}
 
