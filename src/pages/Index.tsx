@@ -119,24 +119,7 @@ export default function Index() {
     setCurrentScreen(screen);
   };
 
-  if (!isTelegram) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-6">
-        <div className="text-center space-y-6 max-w-md">
-          <div className="w-32 h-32 mx-auto bg-primary rounded-3xl flex items-center justify-center">
-            <span className="text-6xl font-bold text-white">F</span>
-          </div>
-          <h1 className="text-3xl font-bold">FITSIZ</h1>
-          <p className="text-muted-foreground text-lg">
-            Пожалуйста, откройте приложение в Telegram
-          </p>
-          <div className="w-48 h-48 mx-auto bg-white rounded-2xl p-4">
-            <div className="text-xs text-black">QR-код здесь</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className="min-h-screen bg-background pb-20">
