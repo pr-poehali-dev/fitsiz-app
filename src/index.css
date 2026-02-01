@@ -13,7 +13,7 @@
     --popover: 28 28 28;
     --popover-foreground: 255 255 255;
     --primary: 66 186 26;
-    --primary-foreground: 255 255 255;
+    --primary-foreground: 18 18 18;
     --secondary: 194 217 24;
     --secondary-foreground: 18 18 18;
     --muted: 40 40 40;
@@ -30,7 +30,7 @@
     --sidebar-background: 18 18 18;
     --sidebar-foreground: 255 255 255;
     --sidebar-primary: 66 186 26;
-    --sidebar-primary-foreground: 255 255 255;
+    --sidebar-primary-foreground: 18 18 18;
     --sidebar-accent: 28 28 28;
     --sidebar-accent-foreground: 255 255 255;
     --sidebar-border: 40 40 40;
