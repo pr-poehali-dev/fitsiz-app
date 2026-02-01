@@ -8,22 +8,22 @@
   :root {
     --background: 18 18 18;
     --foreground: 255 255 255;
-    --card: 28 28 28;
+    --card: 18 18 18;
     --card-foreground: 255 255 255;
-    --popover: 28 28 28;
+    --popover: 18 18 18;
     --popover-foreground: 255 255 255;
     --primary: 66 186 26;
     --primary-foreground: 18 18 18;
     --secondary: 194 217 24;
     --secondary-foreground: 18 18 18;
-    --muted: 40 40 40;
-    --muted-foreground: 136 136 136;
+    --muted: 60 60 60;
+    --muted-foreground: 180 180 180;
     --accent: 194 217 24;
     --accent-foreground: 18 18 18;
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
     --border: 40 40 40;
-    --input: 40 40 40;
+    --input: 30 30 30;
     --ring: 66 186 26;
     --radius: 1rem;
 
@@ -31,7 +31,7 @@
     --sidebar-foreground: 255 255 255;
     --sidebar-primary: 66 186 26;
     --sidebar-primary-foreground: 18 18 18;
-    --sidebar-accent: 28 28 28;
+    --sidebar-accent: 18 18 18;
     --sidebar-accent-foreground: 255 255 255;
     --sidebar-border: 40 40 40;
     --sidebar-ring: 66 186 26;
